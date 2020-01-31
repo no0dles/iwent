@@ -81,22 +81,12 @@ export class EventStore {
 
     const eventToMovePrev = eventToMove.prev;
     const eventToMoveNext = eventToMove.next;
+
     eventToMove.prev = moveToBeforeId;
     eventToMove.next = moveToBefore.next;
     eventToMoveBefore.next = eventToMoveNext;
     eventToMoveAfter.prev = eventToMovePrev;
     moveToBefore.next = eventId;
     moveToAfter.prev = eventId;
-
-    // this.events[moveAfter].next = event.id;
-    // this.events[this.events[moveAfter].next].prev = event.id;
-    //
-    // this.events[event.id].prev = moveAfter;
-    // this.events[event.id].next = this.events[moveAfter].next;
-
-    // this.events[this.events[moveAfter].next].prev = event.id;
-    // this.events[event.id].next = this.events[moveAfter].next;
-    // this.events[moveAfter].next = event.id;
-    // this.events[event.id].prev = moveAfter;
   }
 }
