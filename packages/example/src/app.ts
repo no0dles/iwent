@@ -4,6 +4,8 @@ import {RemoveLaneEventHandler} from './handlers/remove-lane/remove-lane.handler
 import {AddCardEvent} from './handlers/add-card/add-card.event';
 import {AddCardEventHandler} from './handlers/add-card/add-card.handler';
 import {AddCardListenerEvent} from './handlers/add-card-listener/add-card-listener.event';
+import {RemoveCardEvent} from './handlers/remove-card/remove-card.event';
+import {RemoveCardEventHandler} from './handlers/remove-card/remove-card.handler';
 import {AddCardListenerEventHandler} from './handlers/add-card-listener/add-card-listener.handler';
 import {AddLaneEventHandler} from './handlers/add-lane/add-lane.handler';
 import {Application} from '@iwent/web';
@@ -13,4 +15,5 @@ export const exampleApp = new Application();
 exampleApp.addEventHandler(AddLaneEvent, new AddLaneEventHandler());
 exampleApp.addEventHandler(RemoveLaneEvent, new RemoveLaneEventHandler());
 exampleApp.addEventHandler(AddCardEvent, new AddCardEventHandler());
+exampleApp.addEventHandler(RemoveCardEvent, new RemoveCardEventHandler());
 exampleApp.addEventHandler(AddCardListenerEvent, new AddCardListenerEventHandler());
