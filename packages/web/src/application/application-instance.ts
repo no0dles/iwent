@@ -102,6 +102,9 @@ export class ApplicationInstance {
 
   private moveEventDown(event: ApplicationEvent<any>, afterId?: string | null) {
     const prevEvent = this.eventStore.prev(event.id);
+    if (!prevEvent) {
+      //load events
+    }
     this.eventStore.move(event.id, afterId);
     this.replayAfter(prevEvent ? prevEvent.id : undefined);
   }

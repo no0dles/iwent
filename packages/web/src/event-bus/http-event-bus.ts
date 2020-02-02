@@ -19,7 +19,6 @@ export class HttpEventBus implements EventBus {
       this.openDefer.resolve();
     };
     this.eventSource.addEventListener('message', (e) => {
-      console.log('receive', e);
       const messageData = JSON.parse(e.data);
       for (const listener of this.listeners['receive'] || []) {
         listener(messageData.event, messageData.afterId);

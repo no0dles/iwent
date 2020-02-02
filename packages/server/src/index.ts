@@ -1,1 +1,1 @@
-export {HttpEventBusServer} from './http-server';
+export {HttpEventBusServer} from './http-event-bus-server';

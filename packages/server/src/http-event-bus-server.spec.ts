@@ -1,7 +1,7 @@
 import * as EventSource from 'eventsource';
-import {HttpEventBusServer} from './http-server';
 import * as request from 'request';
 import {ApplicationEvent, Defer} from '@iwent/core';
+import {HttpEventBusServer} from './http-event-bus-server';
 
 describe('http-server', () => {
   let server: HttpEventBusServer;

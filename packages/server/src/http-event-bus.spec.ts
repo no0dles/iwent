@@ -1,8 +1,8 @@
 import * as EventSource from 'eventsource';
 import 'isomorphic-fetch';
 import {HttpEventBus} from '@iwent/web';
-import {HttpEventBusServer} from './http-server';
 import {Defer} from '@iwent/core';
+import {HttpEventBusServer} from './http-event-bus-server';
 
 describe('http-event-bus', () => {
   let server: HttpEventBusServer;

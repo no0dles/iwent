@@ -14,7 +14,8 @@
       "packages/core",
       "packages/web",
       "packages/server"
-    ]
+    ],
+    "nohoist": ["**/webpack", "**/webpack-cli/**"]
   },
   "license": "MIT"
 }
