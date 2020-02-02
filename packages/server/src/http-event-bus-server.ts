@@ -25,6 +25,7 @@ export class HttpEventBusServer {
         });
         res.write(JSON.stringify(event));
         res.end();
+        return;
       }
 
       const events: ApplicationEvent<any>[] = [];

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {HttpEventBusServer} from '@iwent/server';
 
 const server = new HttpEventBusServer();

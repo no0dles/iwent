@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {HttpEventBus} from '@iwent/web';
 import {exampleApp} from './app';
 import {AddLaneEvent} from './handlers/add-lane/add-lane.event';

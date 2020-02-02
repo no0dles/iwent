@@ -17,7 +17,7 @@ describe('index', () => {
   it('add lane and card', () => {
     instance.dispatch(AddLaneEvent, {laneId: 'abc'}, {id: 'a'});
     instance.dispatch(AddCardEvent, {laneId: 'abc', cardId: 'def', title: 'cardtitle'}, {id: 'b'});
-    expect(document.body.innerHTML).toBe('<div id="board"><div id="lane-abc">lane<div id="card-def">cardtitle</div></div></div>');
+    expect(document.body.innerHTML).toBe('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div><div id="card-def" class="card">cardtitle</div></div></div>');
   });
 
   it('add lane and listener and throw error', async () => {
@@ -44,27 +44,27 @@ describe('index', () => {
     instance.dispatch(AddCardListenerEvent, {laneId: 'abc', cardId: 'def'}, {id: 'c'});
     instance.restore('b');
     document.getElementById('card-def')?.click();
-    expect(document.body.innerHTML).toMatch(/id=\"card\-[a-z0-9]{10}\"/);
+    expect(document.body.innerHTML).toBe('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div><div id="card-def" class="card">cardtitle</div></div></div>');
   });
 
 
   it('add lane and click', () => {
     instance.dispatch(AddLaneEvent, {laneId: 'abc'}, {id: 'a'});
     document.getElementById(`lane-abc`)?.click();
-    expect(document.body.innerHTML).toMatch(/id=\"card\-[a-z0-9]{10}\"/);
+    expect(document.body.innerHTML).toBe('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div></div></div>');
   });
 
   it('add lane and restore', () => {
     instance.dispatch(AddLaneEvent, {laneId: 'abc'}, {id: 'a'});
-    document.getElementById(`lane-abc`)?.click();
+    document.getElementById(`add-card-abc`)?.click();
     expect(document.body.innerHTML).toMatch(/id=\"card\-[a-z0-9]{10}\"/);
     instance.restore('a');
-    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc">lane</div></div>');
+    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div></div></div>');
   });
 
   it('add lane event', () => {
     instance.dispatch(AddLaneEvent, {laneId: 'abc'}, {id: 'a'});
-    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc">lane</div></div>');
+    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div></div></div>');
   });
 
   it('reset to the beginning', () => {
@@ -82,8 +82,8 @@ describe('index', () => {
   it('reset to specific event', () => {
     instance.dispatch(AddLaneEvent, {laneId: 'abc'}, {id: 'a'});
     instance.dispatch(AddLaneEvent, {laneId: 'def'}, {id: 'b'});
-    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc">lane</div><div id="lane-def">lane</div></div>');
+    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div></div><div id="lane-def" class="lane"><div class="header"><button id="add-card-def" class="btn block">Add card</button></div></div></div>');
     instance.restore('a');
-    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc">lane</div></div>');
+    expect(document.body.innerHTML).toEqual('<div id="board"><div id="lane-abc" class="lane"><div class="header"><button id="add-card-abc" class="btn block">Add card</button></div></div></div>');
   });
 });
