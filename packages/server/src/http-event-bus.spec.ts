@@ -15,8 +15,12 @@ describe('http-event-bus', () => {
   });
 
   afterEach(async () => {
-    bus.close();
-    await server.close();
+    if (bus) {
+      bus.close();
+    }
+    if (server) {
+      await server.close();
+    }
   });
 
   it('should open event source', async () => {
@@ -41,6 +45,27 @@ describe('http-event-bus', () => {
     const event = await bus.get('a');
     expect(event).toEqual({id: 'a', type: 'test', data: {}});
   });
+
+  it('should get events', async () => {
+    const expectedEvents = [{id: 'a', data: {}, type: 'test'}, {id: 'b', data: {}, type: 'test'}, {id: 'c', data: {}, type: 'test'}];
+    for(const event of expectedEvents) {
+      server.eventStore.push(event.id, event);
+    }
+
+    const actualEvents = await bus.getNext();
+    expect(actualEvents).toEqual(expectedEvents);
+  });
+
+  it('should get events after id', async () => {
+    const expectedEvents = [{id: 'a', data: {}, type: 'test'}, {id: 'b', data: {}, type: 'test'}, {id: 'c', data: {}, type: 'test'}];
+    for(const event of expectedEvents) {
+      server.eventStore.push(event.id, event);
+    }
+
+    const actualEvents = await bus.getNext('b');
+    expect(actualEvents).toEqual([{id: 'c', data: {}, type: 'test'}]);
+  });
+
 
   // it('should close connection', async () => {
   //   await bus.opened;

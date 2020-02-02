@@ -5,6 +5,7 @@ import {HttpRouter} from './http-router';
 export class HttpServer {
   private server: http.Server;
   public router = new HttpRouter();
+  private readonly errorListeners: ((err: Error) => void)[] = [];
 
   constructor() {
     this.server = http.createServer((req, res) => {
@@ -13,6 +14,15 @@ export class HttpServer {
         res.writeHead(404).end();
       }
     });
+    this.server.on('error', err => {
+      for (const errorListener of this.errorListeners) {
+        errorListener(err);
+      }
+    });
+  }
+
+  on(event: 'error', handler: (err: Error) => void) {
+    this.errorListeners.push(handler);
   }
 
   listen(port: number) {

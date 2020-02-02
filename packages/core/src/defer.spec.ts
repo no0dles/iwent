@@ -11,18 +11,14 @@ describe('defer', () => {
     expect.assertions(1);
     const defer = new Defer();
     defer.reject(new Error('test'));
-    expect(defer.promise).rejects.toEqual({
-      error: 'test',
-    });
+    expect(defer.promise).rejects.toEqual(new Error('test'));
   });
 
   it('should not resolve already rejected promise', () => {
     const defer = new Defer();
     defer.reject(new Error('test'));
     expect(() => defer.resolve()).toThrow();
-    expect(defer.promise).rejects.toEqual({
-      error: 'test',
-    });
+    expect(defer.promise).rejects.toEqual(new Error('test'));
   });
 
   it('should not reject already resolve promise', async () => {
@@ -46,9 +42,7 @@ describe('defer', () => {
     defer.reject(new Error('test'));
 
     expect(() => defer.reject(new Error('test2'))).toThrow();
-    expect(defer.promise).rejects.toEqual({
-      error: 'test',
-    });
+    expect(defer.promise).rejects.toEqual(new Error('test'));
   });
 
   it('should be rejected after rejection', async () => {

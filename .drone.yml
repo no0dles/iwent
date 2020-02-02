@@ -5,40 +5,40 @@ type: docker
 
 steps:
   - name: install
-    image: node:12
+    image: node:13.3.0
     commands:
       - yarn install
 
   - name: build:core
-    image: node:12
+    image: node:13.3.0
     depends_on: [install]
     commands:
       - cd packages/core
       - yarn build
 
   - name: build:web
-    image: node:12
+    image: node:13.3.0
     depends_on: [install, build:core]
     commands:
       - cd packages/web
       - yarn build
 
   - name: build:server
-    image: node:12
+    image: node:13.3.0
     depends_on: [install, build:core, build:web]
     commands:
       - cd packages/server
       - yarn build
 
   - name: build:example
-    image: node:12
+    image: node:13.3.0
     depends_on: [install, build:core, build:web, build:server]
     commands:
       - cd packages/example
       - yarn build
 
   - name: test
-    image: node:12
+    image: node:13.3.0
     depends_on: [install, build:core, build:web, build:server, build:example]
     commands:
       - yarn test

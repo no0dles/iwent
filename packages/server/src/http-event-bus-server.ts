@@ -3,6 +3,7 @@ import {ApplicationEvent, EventStore} from '@iwent/core';
 import {HttpServer} from './http-server';
 
 export class HttpEventBusServer {
+  private closing = false;
   private server = new HttpServer();
   public clients: HttpServerClient[] = [];
   public eventStore = new EventStore<ApplicationEvent<any>>();
@@ -43,6 +44,11 @@ export class HttpEventBusServer {
     });
 
     this.server.router.get('/', (req, res) => {
+      if (this.closing) {
+        res.end();
+        return;
+      }
+
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -74,11 +80,16 @@ export class HttpEventBusServer {
     });
   }
 
+  on(event: 'error', handler: (err: Error) => void) {
+    this.server.on(event, handler);
+  }
+
   listen(port: number) {
     return this.server.listen(port);
   }
 
   async close(): Promise<void> {
+    this.closing = true;
     for (const client of this.clients) {
       await client.close();
     }
