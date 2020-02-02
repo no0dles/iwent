@@ -40,15 +40,8 @@ steps:
   - name: test
     image: node:13.3.0
     depends_on: [install, build:core, build:web, build:server, build:example]
-    failure: ignore
     commands:
-      - yarn test
-
-  - name: coverage
-    image: lizheming/drone-coveralls
-    depends_on: [test]
-    settings:
-      files:
-        - ./coverage/lcov.info
-      token:
+      - yarn coverage
+    environment:
+      COVERALLS_REPO_TOKEN:
         from_secret: coveralls_token
