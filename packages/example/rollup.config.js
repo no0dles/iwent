@@ -45,6 +45,6 @@ export default {
             inject: 'head',
             externals: [],
         }),
-        serve('dist')
+        //serve('dist')
     ],
 };
