@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "test": "jest"
+    "test": "jest --silent"
   },
   "workspaces": {
     "packages": [
