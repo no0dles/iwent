@@ -8,6 +8,7 @@ module.exports = {
     ],
     "coverageReporters": [
         "json",
+        "text-lcov",
         "html"
     ],
     roots: [

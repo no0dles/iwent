@@ -41,13 +41,7 @@ steps:
     image: node:13.3.0
     depends_on: [install, build:core, build:web, build:server, build:example]
     commands:
-      - yarn test
-
-  - name: coverage
-    image: plugins/codecov
-    depends_on: [test]
-    settings:
-      paths:
-        - coverage
-      token:
-        from_secret: codecov_token
+      - yarn coverage
+    environment:
+      COVERALLS_REPO_TOKEN:
+        from_secret: coveralls_token
