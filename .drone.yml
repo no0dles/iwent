@@ -25,7 +25,7 @@ steps:
 
   - name: build:server
     image: node:12
-    depends_on: [install, build:core]
+    depends_on: [install, build:core, build:web]
     commands:
       - cd packages/server
       - yarn build
