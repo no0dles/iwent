@@ -8,7 +8,7 @@ describe('http-server', () => {
 
   beforeEach(async () => {
     server = new HttpEventBusServer();
-    await server.listen(3333);
+    await server.listen(3000);
   });
 
   afterEach(async () => {
@@ -37,7 +37,7 @@ describe('http-server', () => {
   });
 
   it('should receive event from eventsource', async () => {
-    const source = new EventSource('http://localhost:3333');
+    const source = new EventSource('http://localhost:3000');
     const receivedMessageDefer = new Defer();
     source.addEventListener('message', e => {
       const messageData = JSON.parse(e.data);
@@ -65,7 +65,7 @@ describe('http-server', () => {
 
   function sendEvent(event: ApplicationEvent<any>) {
     const defer = new Defer<string | null>();
-    request.post('http://localhost:3333', {json: event}, async (err, res) => {
+    request.post('http://localhost:3000', {json: event}, async (err, res) => {
       if (err) {
         defer.reject(err)
       } else {

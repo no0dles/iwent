@@ -32,7 +32,7 @@ steps:
 
   - name: build:example
     image: node:12
-    depends_on: [install, build:core, build:web]
+    depends_on: [install, build:core, build:web, build:server]
     commands:
       - cd packages/example
       - yarn build
