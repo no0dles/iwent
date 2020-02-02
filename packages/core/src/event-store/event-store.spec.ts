@@ -16,9 +16,7 @@ describe('event-store', () => {
       event = store.next(event.id);
     }
     expect(event).toBe(null);
-    console.log('compare first');
     expect(store.first()?.id).toBe(ids[0]);
-    console.log('compare last');
     expect(store.last()?.id).toBe(ids[ids.length - 1]);
   }
 

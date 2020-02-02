@@ -1,6 +1,7 @@
 import * as http from "http";
 import {HttpRouterHandler} from './http-router-handler';
 import {HttpMethodRouter} from './http-method-router';
+import {HttpRequest} from './http-request';
 
 export class HttpRouter {
   private readonly middlewares: HttpRouterHandler[] = [];
@@ -55,13 +56,14 @@ export class HttpRouter {
       return false;
     }
 
+    const req = new HttpRequest(request);
     for (const middleware of this.middlewares) {
-      middleware(request, response);
+      middleware(req, response);
     }
 
     const methodRouter = this.methods[request.method];
     if (methodRouter) {
-      return methodRouter.handle(request, response);
+      return methodRouter.handle(req, response);
     }
     return false;
   }

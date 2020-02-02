@@ -14,6 +14,33 @@ export class HttpEventBusServer {
       res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     });
 
+    this.server.router.get('/event', (req, res) => {
+      const id = req.query('id');
+      const afterId = req.query('afterId');
+
+      if (id) {
+        const event = this.eventStore.get(id);
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+        });
+        res.write(JSON.stringify(event));
+        res.end();
+      }
+
+      const events: ApplicationEvent<any>[] = [];
+      let current = afterId ? this.eventStore.next(afterId) : this.eventStore.first();
+      while (current) {
+        events.push(current);
+        current = this.eventStore.next(current.id);
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+      });
+      res.write(JSON.stringify(events));
+      res.end();
+    });
+
     this.server.router.get('/', (req, res) => {
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -21,27 +48,23 @@ export class HttpEventBusServer {
         'Connection': 'keep-alive',
       });
       res.write('\n');
+
       const client = new HttpServerClient(res);
       this.clients.push(client);
-      req.on('close', () => {
+
+      req.onClose.then(() => {
         const index = this.clients.indexOf(client);
         this.clients.splice(index);
       });
     });
 
-    this.server.router.post('/', (req, res) => {
-      let body = '';
-      req.on('data', chunk => {
-        body += chunk.toString(); // convert Buffer to string
-      });
-      req.on('end', () => {
-        const payload = JSON.parse(body);
-        const afterId = this.eventStore.push(payload.id, payload);
-        res.end(afterId);
-        for (const client of this.clients) {
-          client.push(payload, afterId);
-        }
-      });
+    this.server.router.post('/', async (req, res) => {
+      const payload = await req.json<ApplicationEvent<any>>();
+      const afterId = this.eventStore.push(payload.id, payload);
+      res.end(afterId);
+      for (const client of this.clients) {
+        client.push(payload, afterId);
+      }
     });
 
     this.server.router.options((req, res) => {

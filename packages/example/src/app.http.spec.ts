@@ -1,4 +1,4 @@
-import {AddLaneEvent} from './add-lane/add-lane.event';
+import {AddLaneEvent} from './handlers/add-lane/add-lane.event';
 import {ApplicationEvent, Defer, MockEventBus} from '@iwent/core';
 import {exampleApp} from './app';
 

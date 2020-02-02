@@ -5,6 +5,8 @@ import {DomOperation} from './operations/dom-operation';
 import {DomRemoveOperation} from './operations/dom-remove-operation';
 import {DomAddEventListenerOperation} from './operations/dom-add-event-listener-operation';
 import {DomCheckpointOperation} from './operations/dom-checkpoint-operation';
+import {DomAddClassOperation} from './operations/dom-add-class-operation';
+import {DomEmptyElementResult} from './dom-empty-element-result';
 
 export class ApplicationDomStore implements DomStore {
   private readonly operations: DomOperation<any>[] = [];
@@ -17,7 +19,8 @@ export class ApplicationDomStore implements DomStore {
   }
 
   getElement(elementId: string): DomElementResult {
-    return this.getElementResult(elementId);
+    const element = document.getElementById(elementId);
+    return this.getElementResult(element);
   }
 
   removeElement(containerId: string, elementId: string) {
@@ -33,6 +36,9 @@ export class ApplicationDomStore implements DomStore {
     for (const errorListener of this.errorListeners) {
       errorListener(err);
     }
+    if (this.errorListeners.length === 0) {
+      console.error(err);
+    }
   }
 
   private addOperation<T>(operation: DomOperation<T>): T {
@@ -41,10 +47,25 @@ export class ApplicationDomStore implements DomStore {
     return result;
   }
 
-  private getElementResult(elementId: string): DomElementResult {
+  private getElementResult(element: Element | null): DomElementResult {
+    if (!element) {
+      return new DomEmptyElementResult();
+    }
+
     return {
       addEventListener: (event: string, listener: () => void) => {
-        return this.addOperation(new DomAddEventListenerOperation(this, elementId, event, listener));
+        return this.addOperation(new DomAddEventListenerOperation(this, element.id, event, listener));
+      },
+      addClass: name => {
+        return this.addOperation(new DomAddClassOperation(this, element.id, name));
+      },
+      getElementsByClassName: name => {
+        const elements = element.getElementsByClassName(name);
+        const results: DomElementResult[] = [];
+        for (let i = 0; i < elements.length; i++) {
+          results.push(this.getElementResult(elements.item(i)));
+        }
+        return results;
       },
     };
   }

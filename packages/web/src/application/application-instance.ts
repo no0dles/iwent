@@ -13,7 +13,13 @@ export class ApplicationInstance {
     this.domStore = new ApplicationDomStore(this.errorListeners);
     this.eventBus.on('receive', (event, afterId) => {
       this.receive(event, afterId);
-    })
+    });
+    this.eventBus.getNext().then(events => {
+      for (const event of events) {
+        this.eventStore.push(event.id, event);
+        this.runEvent(event);
+      }
+    });
   }
 
   on(event: 'error', listener: (err: Error) => void) {
@@ -70,6 +76,7 @@ export class ApplicationInstance {
 
   private runEvent<T>(event: ApplicationEvent<T>) {
     const context = new ApplicationContext(this, this.domStore);
+    console.log('running event ' + event.id);
     let success = true;
     for (const handler of this.handlers[event.type]) {
       try {
@@ -77,6 +84,9 @@ export class ApplicationInstance {
       } catch (e) {
         for (const errorListener of this.errorListeners) {
           errorListener(e);
+        }
+        if (this.errorListeners.length === 0) {
+          console.error(e);
         }
         success = false;
         break;
@@ -102,8 +112,12 @@ export class ApplicationInstance {
 
   private moveEventDown(event: ApplicationEvent<any>, afterId?: string | null) {
     const prevEvent = this.eventStore.prev(event.id);
-    if (!prevEvent) {
-      //load events
+    if (afterId) {
+      const afterEvent = this.eventStore.get(afterId);
+      if (!afterEvent) {
+        //const prevEvent = await this.eventBus.get(afterId)
+        //load events
+      }
     }
     this.eventStore.move(event.id, afterId);
     this.replayAfter(prevEvent ? prevEvent.id : undefined);

@@ -1,7 +1,7 @@
-import {AddLaneEvent} from './add-lane/add-lane.event';
-import {AddCardEvent} from './add-card/add-card.event';
-import {AddCardListenerEvent} from './add-card-listener/add-card-listener.event';
-import {RemoveLaneEvent} from './remove-lane/remove-lane.event';
+import {AddLaneEvent} from './handlers/add-lane/add-lane.event';
+import {AddCardEvent} from './handlers/add-card/add-card.event';
+import {AddCardListenerEvent} from './handlers/add-card-listener/add-card-listener.event';
+import {RemoveLaneEvent} from './handlers/remove-lane/remove-lane.event';
 import {ApplicationInstance} from '@iwent/web';
 import {exampleApp} from './app';
 import {Defer, MockEventBus} from '@iwent/core';

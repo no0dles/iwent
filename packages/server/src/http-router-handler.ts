@@ -1,6 +1,7 @@
 import * as http from "http";
+import {HttpRequest} from './http-request';
 
 export interface HttpRouterHandler {
-  (request: http.IncomingMessage,
+  (request: HttpRequest,
    response: http.ServerResponse): void;
 }

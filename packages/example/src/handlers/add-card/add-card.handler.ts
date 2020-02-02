@@ -4,6 +4,7 @@ import {ApplicationEventHandler, ApplicationEventContext} from '@iwent/web';
 
 export class AddCardEventHandler implements ApplicationEventHandler<AddCardEvent> {
   handle(context: ApplicationEventContext, event: ApplicationEvent<AddCardEvent>): void {
-    context.domStore.appendElement(`lane-${event.data.laneId}`, `card-${event.data.cardId}`, `${event.data.title}`);
+    const element = context.domStore.appendElement(`lane-${event.data.laneId}`, `card-${event.data.cardId}`, `${event.data.title}`);
+    element.addClass('card');
   }
 }

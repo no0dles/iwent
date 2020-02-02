@@ -3,7 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'production',
-    entry: './src/index.ts',
+    entry: {
+        main: './src/index.ts',
+        styles: './src/styles.scss'
+    },
     devtool: 'inline-source-map',
     module: {
         rules: [
@@ -11,6 +14,17 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.scss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader',
+                ],
             },
         ],
     },
@@ -20,13 +34,21 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist/bundle'),
         filename: '[name].bundle.js',
-        chunkFilename: '[name].chunkhash.bundle.js',
+        chunkFilename: '[name].[chunkhash].bundle.js',
         publicPath: '/',
     },
+    performance: { hints: false },
     optimization: {
+        runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'all'
-        }
+            chunks: 'all',
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                },
+            },
+        },
     },
     plugins: [new HtmlWebpackPlugin({
         template: 'src/index.html'

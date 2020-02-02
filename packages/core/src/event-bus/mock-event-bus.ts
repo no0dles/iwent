@@ -3,7 +3,7 @@ import {ApplicationEvent} from '../application/application-event';
 import {EventStore} from '../event-store/event-store';
 
 export class MockEventBus implements EventBus {
-  private eventStore = new EventStore();
+  private eventStore = new EventStore<ApplicationEvent<any>>();
   private listeners: { [key: string]: ((event: ApplicationEvent<any>, after: string | null) => void)[] } = {};
 
   close(): void {
@@ -26,5 +26,19 @@ export class MockEventBus implements EventBus {
       listener(event, afterId);
     }
     return afterId;
+  }
+
+  async get(id: string): Promise<ApplicationEvent<any> | null> {
+    return this.eventStore.get(id);
+  }
+
+  async getNext(id?: string | null): Promise<ApplicationEvent<any>[]> {
+    const events: ApplicationEvent<any>[] = [];
+    let current = id ? this.eventStore.next(id) : this.eventStore.first();
+    while (current) {
+      events.push(current);
+      current = this.eventStore.next(current.id);
+    }
+    return events;
   }
 }

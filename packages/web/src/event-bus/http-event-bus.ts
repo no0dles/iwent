@@ -52,6 +52,28 @@ export class HttpEventBus implements EventBus {
     return null;
   }
 
+  async get(id: string): Promise<ApplicationEvent<any> | null> {
+    const response = await fetch(`${this.endpoint}/event?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    const event = await response.json();
+    return event;
+  }
+
+  async getNext(id?: string | null): Promise<ApplicationEvent<any>[]> {
+    const response = await fetch(`${this.endpoint}/event?afterId=${id ? id : ''}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    const events = await response.json();
+    return events;
+  }
+
   close() {
     this.eventSource.close();
   }

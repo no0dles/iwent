@@ -10,8 +10,8 @@ describe('http-event-bus', () => {
 
   beforeEach(async () => {
     server = new HttpEventBusServer();
-    await server.listen(3333);
-    bus = new HttpEventBus('http://localhost:3333', {eventSourceFactory: endpoint => new EventSource(endpoint)});
+    await server.listen(3000);
+    bus = new HttpEventBus('http://localhost:3000', {eventSourceFactory: endpoint => new EventSource(endpoint)});
   });
 
   afterEach(async () => {
@@ -34,6 +34,12 @@ describe('http-event-bus', () => {
     });
     await bus.send({id: 'a', type: 'test', data: {}});
     await receivedDefer.promise;
+  });
+
+  it('should send and get event', async () => {
+    await bus.send({id: 'a', type: 'test', data: {}});
+    const event = await bus.get('a');
+    expect(event).toEqual({id: 'a', type: 'test', data: {}});
   });
 
   // it('should close connection', async () => {
