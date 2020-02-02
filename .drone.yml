@@ -1,0 +1,53 @@
+name: default
+
+kind: pipeline
+type: docker
+
+steps:
+  - name: install
+    image: node:12
+    commands:
+      - yarn install
+
+  - name: build:core
+    image: node:12
+    depends_on: [install]
+    commands:
+      - cd packages/core
+      - yarn build
+
+  - name: build:web
+    image: node:12
+    depends_on: [install, build:core]
+    commands:
+      - cd packages/web
+      - yarn build
+
+  - name: build:server
+    image: node:12
+    depends_on: [install, build:core]
+    commands:
+      - cd packages/server
+      - yarn build
+
+  - name: build:example
+    image: node:12
+    depends_on: [install, build:core, build:web]
+    commands:
+      - cd packages/example
+      - yarn build
+
+  - name: test
+    image: node:12
+    depends_on: [install, build:core, build:web, build:server, build:example]
+    commands:
+      - yarn test
+
+  - name: coverage
+    image: plugins/codecov
+    depends_on: [test]
+    settings:
+      paths:
+        - coverage
+      token:
+        from_secret: codecov_token
