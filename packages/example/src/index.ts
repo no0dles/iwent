@@ -6,7 +6,7 @@ import {AddLaneEvent} from './handlers/add-lane/add-lane.event';
 import {ApplicationEvent} from '@iwent/core';
 
 const http = new HttpEventBus('http://localhost:3333');
-const instance = exampleApp.listen(http);
+const instance = exampleApp.listen({bus: http, root: document});
 
 const button = document.getElementById('add-lane-btn');
 if (button) {

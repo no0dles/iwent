@@ -13,7 +13,7 @@ export class DomRemoveEventListenerOperation implements DomOperation<boolean> {
   }
 
   execute() {
-    const element = document.getElementById(this.elementId);
+    const element = this.domStore.root.getElementById(this.elementId);
     if (element) {
       element.removeEventListener(this.event, this.listener);
       return true;

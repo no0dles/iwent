@@ -7,11 +7,22 @@ import {DomAddEventListenerOperation} from './operations/dom-add-event-listener-
 import {DomCheckpointOperation} from './operations/dom-checkpoint-operation';
 import {DomAddClassOperation} from './operations/dom-add-class-operation';
 import {DomEmptyElementResult} from './dom-empty-element-result';
+import {DomAppendChildOperation} from './operations/dom-append-child-operation';
+import {DomRemoveChildOperation} from './operations/dom-remove-child-operation';
 
 export class ApplicationDomStore implements DomStore {
   private readonly operations: DomOperation<any>[] = [];
 
-  constructor(private readonly errorListeners: ((err: Error) => void)[]) {
+  constructor(public readonly root: Document,
+              private readonly errorListeners: ((err: Error) => void)[]) {
+  }
+
+  appendChild(containerId: string, element: HTMLElement) {
+    return this.addOperation(new DomAppendChildOperation(this, containerId, element));
+  }
+
+  removeChild(containerId: string, element: HTMLElement) {
+    return this.addOperation(new DomRemoveChildOperation(this, containerId, element));
   }
 
   appendElement(containerId: string, elementId: string, html: string): DomElementResult {
@@ -19,12 +30,12 @@ export class ApplicationDomStore implements DomStore {
   }
 
   getElement(elementId: string): DomElementResult {
-    const element = document.getElementById(elementId);
+    const element = this.root.getElementById(elementId);
     return this.getElementResult(element);
   }
 
   removeElement(containerId: string, elementId: string) {
-    const element = document.getElementById(elementId);
+    const element = this.root.getElementById(elementId);
     if (element) {
       this.addOperation(new DomRemoveOperation(this, containerId, elementId, element.innerHTML));
       return true;

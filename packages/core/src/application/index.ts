@@ -1,2 +1,2 @@
 export {ApplicationEvent} from './application-event';
-export {EventConstructable} from './application-event-type';
+export {EventConstructable, DefaultConstructable, Constructable} from './application-event-type';

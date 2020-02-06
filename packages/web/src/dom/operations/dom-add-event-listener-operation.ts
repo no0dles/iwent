@@ -22,7 +22,7 @@ export class DomAddEventListenerOperation implements DomOperation<boolean> {
   }
 
   execute() {
-    const element = document.getElementById(this.elementId);
+    const element = this.domStore.root.getElementById(this.elementId);
     if (element) {
       element.addEventListener(this.event, this.listener);
       return true;

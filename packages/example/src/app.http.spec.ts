@@ -42,10 +42,11 @@ describe('app event bus', () => {
 
 
   it('should dispatch events and sync', async () => {
-    document.body.innerHTML = '<div id="board"></div><div id="board"></div>';
+    const root = document.implementation.createHTMLDocument('test');
+    root.body.innerHTML = '<div id="board"></div>';
 
-    const instanceA = exampleApp.listen(eventBus);
-    const instanceB = exampleApp.listen(eventBus);
+    const instanceA = exampleApp.listen({bus: eventBus, root: root});
+    const instanceB = exampleApp.listen({bus: eventBus, root: root});
 
     const receiveDefer = new Defer<void>();
     eventBus.on('receive', (event, after) => {
@@ -58,14 +59,15 @@ describe('app event bus', () => {
     instanceB.dispatch(AddLaneEvent, {laneId: 'def'}, {id: 'b'});
 
     await receiveDefer.promise;
-    console.log(document.body.innerHTML);
+    console.log(root.body.innerHTML);
   });
 
 
   it('should move dispatched event down', async () => {
-    document.body.innerHTML = '<div id="board"></div>/div>';
+    const root = document.implementation.createHTMLDocument('test');
+    root.body.innerHTML = '<div id="board"></div>';
 
-    const instance = exampleApp.listen(eventBus);
+    const instance = exampleApp.listen({bus: eventBus, root: document});
 
     const event: ApplicationEvent<any> = {id: 'a', type: 'add_lane', data: {laneId: 'def'}};
     eventBus.push(event);

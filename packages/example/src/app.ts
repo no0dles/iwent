@@ -7,6 +7,7 @@ import {AddCardListenerEvent} from './handlers/add-card-listener/add-card-listen
 import {AddCardListenerEventHandler} from './handlers/add-card-listener/add-card-listener.handler';
 import {AddLaneEventHandler} from './handlers/add-lane/add-lane.handler';
 import {Application} from '@iwent/web';
+import {MyModal} from './components/modal/modal';
 
 export const exampleApp = new Application();
 
@@ -14,3 +15,4 @@ exampleApp.addEventHandler(AddLaneEvent, new AddLaneEventHandler());
 exampleApp.addEventHandler(RemoveLaneEvent, new RemoveLaneEventHandler());
 exampleApp.addEventHandler(AddCardEvent, new AddCardEventHandler());
 exampleApp.addEventHandler(AddCardListenerEvent, new AddCardListenerEventHandler());
+exampleApp.addComponent(MyModal);

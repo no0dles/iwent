@@ -12,7 +12,7 @@ export class DomAddClassOperation implements DomOperation<boolean> {
   }
 
   execute() {
-    const element = document.getElementById(this.elementId);
+    const element = this.domStore.root.getElementById(this.elementId);
     if (element) {
       element.classList.add(this.name);
       return true;

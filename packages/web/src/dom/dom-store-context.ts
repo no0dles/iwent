@@ -32,4 +32,14 @@ export class DomStoreContext implements DomStore {
     this.checkIfClosed();
     return this.domStore.removeElement(containerId, elementId);
   }
+
+  appendChild(containerId: string, elm: HTMLElement): boolean {
+    this.checkIfClosed();
+    return this.domStore.appendChild(containerId, elm);
+  }
+
+  removeChild(containerId: string, element: HTMLElement): boolean {
+    this.checkIfClosed();
+    return this.domStore.removeChild(containerId, element);
+  }
 }

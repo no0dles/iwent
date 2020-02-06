@@ -16,13 +16,19 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
+                test: /\.(html)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: false,
+                    },
+                },
+            },
+            {
                 test: /\.scss$/i,
                 use: [
-                    // Creates `style` nodes from JS strings
                     'style-loader',
-                    // Translates CSS into CommonJS
                     'css-loader',
-                    // Compiles Sass to CSS
                     'sass-loader',
                 ],
             },
@@ -37,7 +43,7 @@ module.exports = {
         chunkFilename: '[name].[chunkhash].bundle.js',
         publicPath: '/',
     },
-    performance: { hints: false },
+    performance: {hints: false},
     optimization: {
         runtimeChunk: 'single',
         splitChunks: {
@@ -50,7 +56,9 @@ module.exports = {
             },
         },
     },
-    plugins: [new HtmlWebpackPlugin({
-        template: 'src/index.html'
-    })],
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: 'src/index.html'
+        })
+    ],
 };

@@ -1,7 +1,9 @@
 import {ApplicationDomStore} from '../dom/application-dom-store';
 import {ApplicationContext} from './application-context';
 import {ApplicationEventHandler} from './application-event-handler';
-import {ApplicationEvent, EventBus, EventConstructable, EventStore} from '@iwent/core';
+import {ApplicationEvent, EventConstructable, EventStore} from '@iwent/core';
+import {ApplicationInstanceOptions} from './application-instance-options';
+import {ApplicationContextDispatchOptions} from './application-context-dispatch-options';
 
 export class ApplicationInstance {
   private readonly domStore: ApplicationDomStore;
@@ -9,12 +11,12 @@ export class ApplicationInstance {
   private readonly errorListeners: ((err: Error) => void)[] = [];
 
   constructor(private handlers: { [key: string]: ApplicationEventHandler<any>[] } = {},
-              private eventBus: EventBus) {
-    this.domStore = new ApplicationDomStore(this.errorListeners);
-    this.eventBus.on('receive', (event, afterId) => {
+              private options: ApplicationInstanceOptions) {
+    this.domStore = new ApplicationDomStore(options.root, this.errorListeners);
+    this.options.bus.on('receive', (event, afterId) => {
       this.receive(event, afterId);
     });
-    this.eventBus.getNext().then(events => {
+    this.options.bus.getNext().then(events => {
       for (const event of events) {
         this.eventStore.push(event.id, event);
         this.runEvent(event);
@@ -37,22 +39,25 @@ export class ApplicationInstance {
     this.domStore.restore(id);
   }
 
-  dispatch<T>(eventType: EventConstructable<T>, payload: T, options?: { id?: string }) {
+  dispatch<T>(eventType: EventConstructable<T>, payload: T, options?: ApplicationContextDispatchOptions) {
     const result = this.addEvent(eventType, payload, options);
-    this.eventBus.send(result.event).then(afterId => {
-      if (result.afterId !== afterId) {
-        this.moveEventDown(result.event, afterId);
-      }
-    });
+    const shouldSend = !options || options.send;
+    if (shouldSend) {
+      this.options.bus.send(result.event).then(afterId => {
+        if (result.afterId !== afterId) {
+          this.moveEventDown(result.event, afterId);
+        }
+      });
+    }
 
     return result;
   }
 
   close() {
-    this.eventBus.close();
+    this.options.bus.close();
   }
 
-  private addEvent<T>(eventType: EventConstructable<T>, payload: T, options?: { id?: string }) {
+  private addEvent<T>(eventType: EventConstructable<T>, payload: T, options?: ApplicationContextDispatchOptions) {
     const id = (options ? options.id : ApplicationEvent.generateId()) || ApplicationEvent.generateId();
     const event: ApplicationEvent<any> = {id, data: payload, type: eventType.type};
     const afterId = this.eventStore.push(id, event);
@@ -78,7 +83,7 @@ export class ApplicationInstance {
     const context = new ApplicationContext(this, this.domStore);
     console.log('running event ' + event.id);
     let success = true;
-    for (const handler of this.handlers[event.type]) {
+    for (const handler of this.handlers[event.type] || []) {
       try {
         handler.handle(context, event);
       } catch (e) {

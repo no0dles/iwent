@@ -1,0 +1,87 @@
+<style>
+    #root {
+        display: flex;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        min-width: 300px;
+        min-height: 300px;
+        border-radius: 3px;
+    }
+
+    .header {
+        flex-shrink: 0;
+        padding: 8px;
+        background: #3B4252;
+        color: #fff;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        font-size: 1.4em;
+    }
+
+    .content {
+        flex-grow: 1;
+        padding: 8px;
+    }
+
+    .footer {
+        display: flex;
+        background: #ECEFF4;
+        justify-content: flex-end;
+        padding: 8px;
+        flex-shrink: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+    .btn {
+        background: #434C5E;
+        color: #fff;
+        border: 0;
+        padding: 8px 12px;
+        font-size: 1em;
+        border-radius: 3px;
+    }
+    .input-label {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        color: #4C566A;
+    }
+    .input {
+        margin-top: 4px;
+        padding: 8px;
+        font-size: 1em;
+        outline: 0;
+        border: 1px solid #D8DEE9;
+        flex-grow: 1;
+        border-radius: 3px;
+    }
+    .input:focus {
+        border: 1px solid #2E3440;
+    }
+</style>
+<div id="root">
+    <div class="modal">
+        <div class="header">Test</div>
+        <div class="content">
+            <label class="input-label">
+                Title
+                <input id="input" class="input"/>
+            </label>
+        </div>
+        <div class="footer">
+            <button class="btn btn-success" id="save-btn">Save</button>
+        </div>
+    </div>
+</div>

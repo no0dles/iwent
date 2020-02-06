@@ -13,8 +13,8 @@ export class DomRemoveOperation implements DomOperation<boolean> {
   }
 
   execute() {
-    const container = document.getElementById(this.containerId);
-    const element = document.getElementById(this.elementId);
+    const container = this.domStore.root.getElementById(this.containerId);
+    const element = this.domStore.root.getElementById(this.elementId);
     if (container && element) {
       container.removeChild(element);
       return true;

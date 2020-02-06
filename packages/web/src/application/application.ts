@@ -1,6 +1,9 @@
 import {ApplicationEventHandler} from './application-event-handler';
 import {ApplicationInstance} from './application-instance';
-import {EventBus, EventConstructable} from '@iwent/core';
+import {EventConstructable} from '@iwent/core';
+import {ApplicationInstanceOptions} from './application-instance-options';
+import {Constructable} from '@iwent/core';
+import {IwentElement} from '../element';
 
 export class Application {
   private handlers: { [key: string]: ApplicationEventHandler<any>[] } = {};
@@ -12,8 +15,13 @@ export class Application {
     this.handlers[(<any>eventType).type].push(handler);
   }
 
-  listen(eventBus: EventBus) {
-    return new ApplicationInstance(this.handlers, eventBus);
+  addComponent<T extends IwentElement>(component: Constructable<T> & {element: string, register: (app: Application) => void}) {
+    component.register(this);
+    window.customElements.define(component.element, component);
+  }
+
+  listen(options: ApplicationInstanceOptions) {
+    return new ApplicationInstance(this.handlers, options);
   }
 }
 

@@ -14,11 +14,11 @@ export class DomAppendOperation implements DomOperation<DomElementResult> {
   }
 
   execute() {
-    const element = document.createElement('div');
+    const element = this.domStore.root.createElement('div');
     element.innerHTML = this.html;
     element.id = this.elementId;
 
-    const container = document.getElementById(this.containerId);
+    const container = this.domStore.root.getElementById(this.containerId);
     if (container) {
       container.append(element);
     }
