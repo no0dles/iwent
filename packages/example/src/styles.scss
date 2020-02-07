@@ -58,6 +58,8 @@ html, body {
 }
 
 .card {
+  display: flex;
+  justify-content: space-between;
   background: #D8DEE9;
   color: #333;
   padding: 16px;
