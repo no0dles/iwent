@@ -93,6 +93,7 @@ export class ApplicationDomStore implements DomStore {
       }
 
       const reverseOperation = last.reverseOperation();
+      //do not revert temp event
       if (reverseOperation) {
         reverseOperation.execute();
       }

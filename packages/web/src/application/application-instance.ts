@@ -41,7 +41,7 @@ export class ApplicationInstance {
 
   dispatch<T>(eventType: EventConstructable<T>, payload: T, options?: ApplicationContextDispatchOptions) {
     const result = this.addEvent(eventType, payload, options);
-    const shouldSend = !options || options.send;
+    const shouldSend = !options || !options.temporary;
     if (shouldSend) {
       this.options.bus.send(result.event).then(afterId => {
         if (result.afterId !== afterId) {
@@ -133,6 +133,7 @@ export class ApplicationInstance {
 
     let replayEvent = afterId ? this.eventStore.next(afterId) : this.eventStore.first();
     while (replayEvent) {
+      //check for tmp events and ignore them
       this.runEvent(replayEvent);
       replayEvent = this.eventStore.next(replayEvent.id);
     }

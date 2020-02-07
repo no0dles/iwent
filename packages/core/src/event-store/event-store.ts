@@ -6,6 +6,8 @@ export class EventStore<T> {
     'last': {prev: 'first', event: null} as any,
   };
 
+  size = 0;
+
   get(id: string): T | null {
     return this.events[id] ? this.events[id].event : null;
   }
@@ -59,6 +61,7 @@ export class EventStore<T> {
       if (after === 'first') {
         return null;
       }
+      this.size++;
       return after;
     } else {
       this.events[eventId] = {
@@ -71,6 +74,7 @@ export class EventStore<T> {
         this.events[next].prev = eventId;
       }
       this.events['first'].next = eventId;
+      this.size++;
       return null;
     }
   }

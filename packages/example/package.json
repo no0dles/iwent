@@ -30,6 +30,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack",
+    "testdata": "ts-node src/tests/testdata.ts",
+    "stresstest": "ts-node src/tests/stresstest.ts",
     "server": "ts-node src/server.ts",
     "client": "webpack-dev-server"
   },

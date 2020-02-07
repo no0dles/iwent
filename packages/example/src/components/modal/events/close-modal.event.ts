@@ -1,4 +1,4 @@
-import {MyModal} from './modal';
+import {MyModal} from '../modal';
 
 export class CloseModalEvent {
   static type = 'close-modal';

@@ -68,6 +68,7 @@ export class HttpEventBusServer {
     this.server.router.post('/', async (req, res) => {
       const payload = await req.json<ApplicationEvent<any>>();
       const afterId = this.eventStore.push(payload.id, payload);
+      console.log(`pushed event ${payload.id}, total size: ${this.eventStore.size}`);
       res.end(afterId);
       for (const client of this.clients) {
         client.push(payload, afterId);

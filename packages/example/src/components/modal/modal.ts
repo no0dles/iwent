@@ -1,7 +1,9 @@
-import {Application, ApplicationEventContext, ApplicationEventHandler, IwentElement} from '@iwent/web';
-import {OpenModalEvent} from './open-modal.event';
-import {CloseModalEvent} from './close-modal.event';
-import {ApplicationEvent} from '@iwent/core';
+import {Application, ApplicationEventContext} from '@iwent/web';
+import {OpenModalEvent} from './events/open-modal.event';
+import {CloseModalEvent} from './events/close-modal.event';
+import {IwentElement} from '@iwent/web/dist/element';
+import {CloseModalEventHandler} from './handlers/close-modal.handler';
+import {OpenModalEventHandler} from './handlers/open-modal.handler';
 
 export class MyModal extends IwentElement {
   static element = 'my-modal';
@@ -39,23 +41,10 @@ export class MyModal extends IwentElement {
   }
 
   present(context: ApplicationEventContext) {
-    context.dispatch(OpenModalEvent, {modal: this}, {send:false});
+    context.dispatch(OpenModalEvent, {modal: this}, {temporary: true});
   }
 
   close(context: ApplicationEventContext) {
-    console.log('dispatch close');
-    context.dispatch(CloseModalEvent, {modal: this}, {send:false});
-  }
-}
-
-class OpenModalEventHandler implements ApplicationEventHandler<OpenModalEvent> {
-  handle(context: ApplicationEventContext, event: ApplicationEvent<OpenModalEvent>): void {
-    context.domStore.appendChild('board', event.data.modal);
-  }
-}
-
-class CloseModalEventHandler implements ApplicationEventHandler<CloseModalEvent> {
-  handle(context: ApplicationEventContext, event: ApplicationEvent<CloseModalEvent>): void {
-    context.domStore.removeChild('board', event.data.modal);
+    context.dispatch(CloseModalEvent, {modal: this}, {temporary: true});
   }
 }
